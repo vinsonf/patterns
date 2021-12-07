@@ -3,6 +3,7 @@ const { Schema, model } = mongoose;
 const userSchema = new Schema({
     socketId: String,
     username: String,
+    password: String,
 });
 export const UserModel = model('User', userSchema);
 //# sourceMappingURL=user.schema.js.map

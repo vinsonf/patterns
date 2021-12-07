@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SocketioService {
+
   public indexes$!: Observable<any>;
   constructor(private socket: Socket) {
   }
@@ -15,7 +16,15 @@ export class SocketioService {
     this.socket.emit('message', msg);
   }
   getMessage() {
+    console.log(this.socket);
     return this.socket.fromEvent('message').pipe(map((data:any) => data));
+  }
+
+  emit(event: string, data: any) {
+    this.socket.emit(event, data);
+  }
+  get socketId() {
+    return this.socket?.ioSocket.id;
   }
 
 }

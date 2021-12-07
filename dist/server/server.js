@@ -6,6 +6,7 @@ import * as socketIO from "socket.io";
 import http from 'http';
 import dotenv from "dotenv";
 import path from 'path';
+import { UserModel } from "./schemas/user.schema.js";
 dotenv.config();
 const __dirname = path.resolve();
 dotenv.config();
@@ -41,14 +42,17 @@ server.listen(PORT, function () {
 io.on('connection', function (socket) {
     console.log('a user connected');
     socket.emit('message', 'work1');
-    setTimeout(() => {
-        socket.emit('message', 'work2');
-    }, 4000);
-    setTimeout(() => {
-        socket.emit('message', 'work2');
-    }, 10000);
+    socket.on('register', (data) => {
+        register({ ...data, socketId: socket.id });
+    });
+    socket.on('login', (data) => {
+        login({ ...data, socketId: socket.id });
+    });
     socket.on('disconnect', function () {
         console.log('user disconnected');
+        UserModel.findOneAndUpdate({ socketId: socket.id }, { socketId: '' }).then(() => {
+            console.log('socketId removed');
+        });
     });
 });
 app.all("*", function (req, res) {
@@ -56,4 +60,20 @@ app.all("*", function (req, res) {
     console.log(filePath);
     res.sendFile(filePath);
 });
+async function register(data) {
+    console.log(data);
+    const user = await UserModel.create(data);
+    console.log(user);
+}
+async function login(data) {
+    console.log('user login');
+    const user = UserModel.findOne({
+        username: data.username,
+        password: data.password,
+    });
+    if (user[0]) {
+        user.socketId = data.socketId;
+        user.save();
+    }
+}
 //# sourceMappingURL=server.js.map
