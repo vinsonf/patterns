@@ -7,41 +7,12 @@ import http from 'http';
 import dotenv from "dotenv";
 import path from 'path';
 
-import {PlayerModel} from "./schemas/player.schema.js";
-import {GameModel} from "./schemas/game.schema.js";
-import {CardModel} from "./schemas/card.schema.js";
-import { setupCardsInitial } from "./helpers/initial.js";
-import { addRandomCards, findNotUsedCards, findPlayerByCardTitle, getGameState, onAddGame, onAddName, onConnection, passOutCards } from "./helpers/io.sim.js";
+
 
 dotenv.config();
 
 const __dirname = path.resolve();
 
-async function runner() {
-  setupCardsInitial();
-  // await onConnection('1');
-  // await onAddGame('123');
-  // await onAddName('1', 'test', '123');
-  // await onConnection('2');
-
-  // await onConnection('3');
-  // await onAddName('3', 'test3', '123');
-  // await onAddName('2', 'test2', '123');
-  // await addRandomCards('123');
-  // passOutCards('123');
-  // const state = await getGameState('123');
-  // const werewolves = await findPlayerByCardTitle('Werewolf');
-  // const unusedCards = await findNotUsedCards('123');
-  // console.log(JSON.stringify(unusedCards, null, 4));
-  
-  // setTimeout(() => {
-  //   mongoose.connection.db.dropDatabase(function(err, result) {
-  //     console.log(err, result); console.log('DB dropped');
-  //   });
-  // } , 20000);
-}
-
-runner();
 
 dotenv.config();
 const app = express();
@@ -84,7 +55,17 @@ server.listen(PORT, function () {
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  socket.emit('message', 'work')
+  socket.emit('message', 'work1');
+
+  setTimeout(() => {
+    socket.emit('message', 'work2');
+  }, 4000);
+
+
+  setTimeout(() => {
+    socket.emit('message', 'work2');
+  }, 10000);
+
   socket.on('disconnect', function(){
     console.log('user disconnected');
   });
