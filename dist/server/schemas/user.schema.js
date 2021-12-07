@@ -5,4 +5,4 @@ const userSchema = new Schema({
     username: String,
 });
 export const UserModel = model('User', userSchema);
-//# sourceMappingURL=player.schema.js.map
+//# sourceMappingURL=user.schema.js.map
